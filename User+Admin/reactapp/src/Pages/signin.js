@@ -14,16 +14,27 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
       const email= data.get('email');
       const password= data.get('password');
-      const response = fetch('http://localhost:5000/signin', {
+      const response = await fetch('http://localhost:5000/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     });
+      if(response.status === 200){
+        alert("Signin Successfull");
+      }else if(response.status === 300){
+        alert("Invalid credentials");
+      }
+      else if(response.status === 400) {
+        alert("User doesn't exist");
+      }
+      else if(response.status === 500) {
+        alert("error");
+      }
   };
 
   return (
@@ -75,9 +86,9 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item>
-                <p><Link to = '/signup' variant="body2">
+                <Link href = "/signup" variant="body2">
                   Don't have an account? Sign Up
-                </Link></p>
+                </Link>
               </Grid>
             </Grid>
           </Box>

@@ -10,23 +10,33 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {useNavigate} from 'react-router-dom';
 
 
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get('UserName');
     const email = data.get('email');
     const password = data.get('password');
-    const response = fetch('http://localhost:5000/signup', {
+    const response = await fetch('http://localhost:5000/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password})
-  });
+  }); if(response.status === 400){
+     alert("User already exists");
+     navigate("/signin");
+  } else if(response.status === 200){
+    alert("Signup Successfull");
+    navigate("/signin");
+  } else {
+    alert("error");
+  }
   };
 
   return (
@@ -90,7 +100,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link to = '/signin' variant="body2">
+                <Link href = '/signin' variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

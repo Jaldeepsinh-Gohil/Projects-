@@ -44,7 +44,7 @@ app.post('/signup', (req, res) => {
         
     }else {
         const sql = 'INSERT INTO admins (id, name, email, password) VALUES (?, ?, ?, ?)';
-        db.query(sql, [id, username, email, hp], (err, result) => {
+        db.query(sql, [id, username, email, hp], (err) => {
             if (err) return res.status(500).send(err);
             else {res.status(200).send('Signup successful');}
         });
@@ -60,7 +60,7 @@ app.post('/signin', (req, res) => {
     db.query(sql, [email], (err, result) => {
         if (err) return res.status(500).send(err);
         if (result.length > 0) {
-            if(hp == md5(result[0].password)){
+            if(hp === md5(result[0].password)){
                 res.status(200).send('Signin Successfull');
             }else{
                 res.status(300).send('Invalid credentials');
