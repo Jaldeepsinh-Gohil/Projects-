@@ -1,13 +1,16 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Dashboard from "./dashboard";
+import Profile from "../profile";
 
-const Routes = () =>{
+const URoutes = () =>{
     return(
-        <Router>
+        
             <Routes>
-                <Route path = '/dashboard' element={<Dashboard/>}/>
-                <Route path = '/userlist'/>
+                <Route path = '/' element={<Dashboard/>}/>
+                <Route path = 'dashboard' element={<Dashboard/>}/>
+                <Route path = 'profile' element  = {<Profile/>}/>
             </Routes>
-        </Router>
+        
     )
 }
+export default URoutes;

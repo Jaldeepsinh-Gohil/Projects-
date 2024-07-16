@@ -3,4 +3,5 @@ In this project i will be working for the backend of the admin + User Login,Regi
 step by progress will be writtten down now -----
 
 1. Connecting the Database.
-2. Making Api's for Signup & Signin. 
+2. Making Api's for Signup & Signin.
+3. Added Authentication for routes.

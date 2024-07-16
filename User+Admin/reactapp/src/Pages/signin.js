@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,10 +10,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { AuthContext } from '../components/auth';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const {login} = useContext(AuthContext);
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -23,16 +27,22 @@ export default function SignIn() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
-    });
+    });const newdata = await response.json();
       if(response.status === 200){
-        alert("Signin Successfull");
-      }else if(response.status === 300){
+        alert("admin logged in successfully");
+        login(newdata.token);
+        navigate('/adminhomepage');
+      }else if(response.status === 201){
+        alert("user logged in successfully");
+        login(newdata.token);
+        navigate('/userhomepage');
+      }else if(response.status === 202){
         alert("Invalid credentials");
       }
-      else if(response.status === 400) {
+      else if(response.status === 203) {
         alert("User doesn't exist");
       }
-      else if(response.status === 500) {
+      else if(response.status === 204) {
         alert("error");
       }
   };

@@ -6,3 +6,5 @@ step by progress will be writtten down now -----
 2. Defining Routes for the pages
 3. fetching api's.
 4. Made userdashboard pages and addded routes.
+5. added Jwt Autentication and tokenization with Protected routes.
+6. Solved nested routes bug.

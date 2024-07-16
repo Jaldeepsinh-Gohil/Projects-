@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const md5 = require('md5');
 const {v4:uuidv4} = require('uuid');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const app = express();
 const port = 5000 || process.env.PORT;
 
@@ -27,9 +27,9 @@ db.connect(err => {
     console.log('Connected to database.');
 });
 
-// const generateAccessToken = (user) => {
-//     return jwt.sign(user, 'Internship', { expiresIn: '2h' });
-// };
+const generateAccessToken = (user) => {
+    return jwt.sign(user, user.stat, { expiresIn: '2h' });
+};
 
 // Register user
 app.post('/signup', (req, res) => {
@@ -40,13 +40,13 @@ app.post('/signup', (req, res) => {
     db.query(searchuser,[username],(err,result) =>{
         if (err) throw err;
         if (result.length > 0) {
-            res.status(400).send('User already exists');
+           return res.status(400).send('User already exists');
         
     }else {
         const sql = 'INSERT INTO admins (id, name, email, password) VALUES (?, ?, ?, ?)';
         db.query(sql, [id, username, email, hp], (err) => {
             if (err) return res.status(500).send(err);
-            else {res.status(200).send('Signup successful');}
+            else {return res.status(200).send('Signup successful');}
         });
     };
     });
@@ -58,19 +58,31 @@ app.post('/signin', (req, res) => {
     // const isaadmin = JSON.parse(isadmin);
     const sql = 'SELECT * FROM admins WHERE email = ?';
     db.query(sql, [email], (err, result) => {
-        if (err) return res.status(500).send(err);
+        if (err) return res.status(204).json({err});
         if (result.length > 0) {
             if(hp === md5(result[0].password)){
-                res.status(200).send('Signin Successfull');
+                const stat = result[0].status;
+                const user = { email: email, stat: stat };
+                const token = generateAccessToken(user);
+                if(stat === 'active'){
+                    return res.status(200).json({token});
+                }else if(stat === 'disabled'){
+                   return  res.status(201).json({token});
+                }
             }else{
-                res.status(300).send('Invalid credentials');
+               return res.status(202).json({});
             }
-            // const user = { username: username, isadmin: isaadmin };
-            // const token = generateAccessToken(user);
-            // res.status(200).json({ token });
         } else {
-            res.status(400).send('User not Found');
+           return res.status(203).json({});
         }
+    });
+});
+app.get('/getusers',(req,res) => {
+    db.query('SELECT * FROM admins',(error,results)=>{
+        if(error){
+            return res.status(500).json({error});
+        }
+        return res.json(results);
     });
 });
 // Middleware to authenticate token
@@ -79,23 +91,23 @@ app.post('/signin', (req, res) => {
 //     const token = authHeader && authHeader.split(' ')[1];
 //     if (!token) return res.sendStatus(403);
 
-//     jwt.verify(token, 'Internship', (err, user) => {
+//     jwt.verify(token,req.user.stat, (err, user) => {
 //         if (err) return res.sendStatus(403);
 //         req.user = user;
 //         next();
 //     });
 // };
 
-// // Admin route
-// app.get('/admin', authenticateToken, (req, res) => {
-//     if (!req.user.isadmin) return res.sendStatus(403);
-//     res.status(200).send('Welcome to the admin dashboard');
+// // // Admin route
+// app.get('/adminhomepage', authenticateToken, (req, res) => {
+//     if (req.user.stat === 'disabled') return res.sendStatus(403);
+//     return res.status(200).send('Welcome to the admin dashboard');
 // });
 
-// // User route
-// app.get('/dashboard', authenticateToken, (req, res) => {
-//     if (req.user.isadmin) return res.sendStatus(403);
-//     res.status(200).send('Welcome to the user dashboard');
+// // // User route
+// app.get('/userhomepage', authenticateToken, (req, res) => {
+//     if (req.user.stat === 'active') return res.sendStatus(403);
+//     return res.status(200).send('Welcome to the user dashboard');
 // });
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
