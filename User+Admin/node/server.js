@@ -86,29 +86,29 @@ app.get('/getusers',(req,res) => {
     });
 });
 // Middleware to authenticate token
-// const authenticateToken = (req, res, next) => {
-//     const authHeader = req.headers['authorization'];
-//     const token = authHeader && authHeader.split(' ')[1];
-//     if (!token) return res.sendStatus(403);
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.sendStatus(403);
 
-//     jwt.verify(token,req.user.stat, (err, user) => {
-//         if (err) return res.sendStatus(403);
-//         req.user = user;
-//         next();
-//     });
-// };
+    jwt.verify(token,req.user.stat, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+};
 
-// // // Admin route
-// app.get('/adminhomepage', authenticateToken, (req, res) => {
-//     if (req.user.stat === 'disabled') return res.sendStatus(403);
-//     return res.status(200).send('Welcome to the admin dashboard');
-// });
+// // Admin route
+app.get('/adminhomepage', authenticateToken, (req, res) => {
+    if (req.user.stat === 'disabled') return res.sendStatus(403);
+    return res.status(200).send('Welcome to the admin dashboard');
+});
 
-// // // User route
-// app.get('/userhomepage', authenticateToken, (req, res) => {
-//     if (req.user.stat === 'active') return res.sendStatus(403);
-//     return res.status(200).send('Welcome to the user dashboard');
-// });
+// // User route
+app.get('/userhomepage', authenticateToken, (req, res) => {
+    if (req.user.stat === 'active') return res.sendStatus(403);
+    return res.status(200).send('Welcome to the user dashboard');
+});
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
