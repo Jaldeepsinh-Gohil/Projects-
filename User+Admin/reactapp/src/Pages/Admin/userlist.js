@@ -21,7 +21,7 @@ const Userlist = () => {
     return(
         <Container>
       <Typography variant="h3" gutterBottom align="center">
-        Userlist List
+        User List
       </Typography>
       {/* <Button variant="contained" color="primary" onClick={() => setOpenAddDialog(true)}>
         Add Admin

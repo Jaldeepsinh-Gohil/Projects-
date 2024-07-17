@@ -1,18 +1,28 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom"
-import { AuthContext } from "../../components/auth";
+import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { List, ListItemButton, ListItemText } from '@mui/material';
 
 const AsideNav = () =>{
-    const {logout} = useContext(AuthContext);
+    const navigate = useNavigate();
+    const logout = () => {
+        localStorage.removeItem('token');
+        return navigate('/');
+    };
     return(
-        <>
-        <ul>
-            <Link to = '/adminhomepage/adashboard'><li>Dashboard</li></Link>
-            <Link to = '/adminhomepage/aprofile'><li>Profilepage</li></Link>
-            <Link to = '/adminhomepage/userlist'><li>Userlist</li></Link>
-            <Link onClick={logout}><li>Logout</li></Link>
-        </ul>
-        </>
+        <List>
+      <ListItemButton component={Link} to ='/adminhomepage/adashboard'>
+      <ListItemText primary="Dashboard" />
+      </ListItemButton>
+      <ListItemButton component ={Link} to = '/adminhomepage/aprofile'>
+      <ListItemText primary="Profilepage" />
+      </ListItemButton>
+      <ListItemButton compnent = {Link} to = '/adminhomepage/userlist'>
+      <ListItemText primary="Userlist"/>
+      </ListItemButton>
+      <ListItemButton onClick={logout}>
+     <ListItemText primary="Logout" />
+      </ListItemButton>
+    </List>
     )
 } 
 export default AsideNav;

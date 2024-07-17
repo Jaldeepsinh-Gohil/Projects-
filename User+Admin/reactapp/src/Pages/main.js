@@ -4,11 +4,10 @@ import SignIn from "./signin";
 import SignUp from "./signup";
 import UserHP from "./User/userhp";
 import AdminHP from "./Admin/adminhp";
-import { AuthProvider } from "../components/auth";
 import PR from "../components/protectedroute";
 const Main = () =>{
     return(
-        <AuthProvider>
+
         <Router>
             <Routes>
                 <Route path="/" element ={<SignIn/>} />
@@ -18,7 +17,7 @@ const Main = () =>{
                 <Route path="/adminhomepage/*" element={<PR requiredRole='active'><AdminHP/></PR>}/>
             </Routes>
         </Router>
-        </AuthProvider>
+
     )
 }
 export default Main;

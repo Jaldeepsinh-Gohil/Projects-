@@ -1,17 +1,24 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom"
-import { AuthContext } from "../../components/auth";
-
+import { Link } from "react-router-dom";
+import { List, ListItemButton, ListItemText } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 const SideNav = () =>{
-    const {logout}= useContext(AuthContext);
+    const navigate = useNavigate();
+    const logout = () => {
+        localStorage.removeItem('token');
+        navigate('/signin');
+    };
     return(
-        <>
-        <ul>
-            <Link to = '/userhomepage/dashboard'><li>Dashboard</li></Link>
-            <Link to = '/userhomepage/profile'><li>Profilepage</li></Link>
-            <Link onClick={logout}><li>Logout</li></Link>
-        </ul>
-        </>
+        <List>
+      <ListItemButton component={Link} to ='/userhomepage/dashboard'>
+      <ListItemText primary="Dashboard" />
+      </ListItemButton>
+      <ListItemButton component ={Link} to = '/userhomepage/profile'>
+      <ListItemText primary="Profilepage" />
+      </ListItemButton>
+      <ListItemButton onClick={logout}>
+      <ListItemText primary="Logout" />
+      </ListItemButton>
+    </List>
     )
 } 
 export default SideNav;

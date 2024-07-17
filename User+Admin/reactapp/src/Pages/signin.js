@@ -10,13 +10,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AuthContext } from '../components/auth';
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const {login} = useContext(AuthContext);
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -30,11 +27,11 @@ export default function SignIn() {
     });const newdata = await response.json();
       if(response.status === 200){
         alert("admin logged in successfully");
-        login(newdata.token);
+        localStorage.setItem('token',newdata.token);
         navigate('/adminhomepage');
       }else if(response.status === 201){
         alert("user logged in successfully");
-        login(newdata.token);
+        localStorage.setItem('token',newdata.token);
         navigate('/userhomepage');
       }else if(response.status === 202){
         alert("Invalid credentials");

@@ -8,3 +8,6 @@ step by progress will be writtten down now -----
 4. Made userdashboard pages and addded routes.
 5. added Jwt Autentication and tokenization with Protected routes.
 6. Solved nested routes bug.
+7. removed context and shifted it's function dependency inside middleware.
+8. added more freedom of choice so user can choose to stay if caught trying to access unauthorized routes.
+9. improved ui for Admin and User homepages. 
