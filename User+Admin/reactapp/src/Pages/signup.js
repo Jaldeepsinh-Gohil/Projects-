@@ -11,8 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useNavigate} from 'react-router-dom';
-
-
+import Swal from 'sweetalert2';
 
 const defaultTheme = createTheme();
 
@@ -29,13 +28,28 @@ export default function SignUp() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password})
   }); if(response.status === 400){
-     alert("User already exists");
+    Swal.fire({
+      icon: "error",
+      title: "User already Exists",
+      showConfirmButton: false,
+      timer: 1500
+    });
      navigate("/signin");
   } else if(response.status === 200){
-    alert("Signup Successfull");
+    Swal.fire({
+      icon: "success",
+      title: "Signup Successfull",
+      showConfirmButton: false,
+      timer: 1500
+    });
     navigate("/signin");
   } else {
-    alert("error");
+    Swal.fire({
+      icon: "error",
+      title: "error",
+      showConfirmButton: false,
+      timer: 1500
+    });
   }
   };
 

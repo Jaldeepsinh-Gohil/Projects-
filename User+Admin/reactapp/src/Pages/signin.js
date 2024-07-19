@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 const defaultTheme = createTheme();
 
 export default function SignIn() {
@@ -26,21 +27,64 @@ export default function SignIn() {
         body: JSON.stringify({ email, password })
     });const newdata = await response.json();
       if(response.status === 200){
-        alert("admin logged in successfully");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Signed in successfully"
+        });
         localStorage.setItem('token',newdata.token);
         navigate('/adminhomepage');
       }else if(response.status === 201){
-        alert("user logged in successfully");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Signed in successfully"
+        });
         localStorage.setItem('token',newdata.token);
         navigate('/userhomepage');
       }else if(response.status === 202){
-        alert("Invalid credentials");
+        Swal.fire({
+          icon: "error",
+          title: "Invalid credentials",
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
       else if(response.status === 203) {
-        alert("User doesn't exist");
+        Swal.fire({
+          icon: "error",
+          title: "User Doesn't Exists",
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
       else if(response.status === 204) {
-        alert("error");
+        Swal.fire({
+          icon: "error",
+          title: "error",
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
   };
 
